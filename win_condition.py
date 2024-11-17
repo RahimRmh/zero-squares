@@ -32,6 +32,6 @@ def check_both_reached_targets(grid):
 
     if p1_pos == t1_pos and p2_pos == t2_pos:
         print("Both players have reached their targets! Game Over!")
-        return False
+        return True
     
-    return True
+    return False
