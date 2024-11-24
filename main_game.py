@@ -5,6 +5,7 @@ from controls import get_direction_input
 from cell import Cell
 from bfs import bfs_to_win
 from dfs import dfs_to_win
+from ucs import ucs_to_win
 import copy
 
 grid_history = initialize_grid_history()
@@ -30,16 +31,23 @@ def play_game(grid, search_algorithm):
         winning_path = bfs_to_win(grid)
     elif search_algorithm == "dfs":
         winning_path = dfs_to_win(grid)
+    elif search_algorithm == "ucs":
+        winning_path, total_cost = ucs_to_win(grid)
+        print(f"Total Cost: {total_cost}")
     else:
         print("Invalid search algorithm.")
         return
 
     if winning_path:
-        for i, grid_state in enumerate(winning_path):
-            print(f"Step {i + 1}:")
+        print("\nWinning Path:")
+        for i, (grid_state, cost) in enumerate(winning_path):
+            print(f"Step {i + 1} (Cost: {cost}):")
             display_grid(grid_state)
     else:
         print("No winning path possible.")
+
+
+
 
 def interactive_game(grid):
     p1_active, p2_active = True, True
@@ -86,17 +94,23 @@ def main():
     print("Choose mode:")
     print("1. Automatic Solution (BFS)")
     print("2. Automatic Solution (DFS)")
-    print("3. Interactive Play")
+    print("3. Automatic Solution (UCS)")
+    print("4. Interactive Play")
 
-    mode = input("Enter 1, 2, or 3: ").strip()
+    mode = input("Enter 1, 2, 3, or 4: ").strip()
     if mode == "1":
         play_game(grid, "bfs")
     elif mode == "2":
         play_game(grid, "dfs")
     elif mode == "3":
+        play_game(grid, "ucs")
+    elif mode == "4":
         interactive_game(grid)
     else:
         print("Invalid choice. Exiting.")
+
+
+
 
 if __name__ == "__main__":
     main()
