@@ -6,6 +6,7 @@ from cell import Cell
 from bfs import bfs_to_win
 from dfs import dfs_to_win
 from ucs import ucs_to_win
+from astar import astar_to_win
 import copy
 
 grid_history = initialize_grid_history()
@@ -29,19 +30,30 @@ def display_grid(grid):
 def play_game(grid, search_algorithm):
     if search_algorithm == "bfs":
         winning_path = bfs_to_win(grid)
+        total_cost = None
     elif search_algorithm == "dfs":
         winning_path = dfs_to_win(grid)
+        total_cost = None
     elif search_algorithm == "ucs":
         winning_path, total_cost = ucs_to_win(grid)
-        print(f"Total Cost: {total_cost}")
+    elif search_algorithm == "astar":
+        result = astar_to_win(grid)
+        if result is not None:
+            winning_path, total_cost = result
+        else:
+            print("No solution found!")
+            return
     else:
         print("Invalid search algorithm.")
         return
 
     if winning_path:
+        if total_cost is not None:
+            print(f"Total Cost: {total_cost}")
+
         print("\nWinning Path:")
-        for i, (grid_state, cost) in enumerate(winning_path):
-            print(f"Step {i + 1} (Cost: {cost}):")
+        for i, grid_state in enumerate(winning_path):
+            print(f"Step {i + 1}:")
             display_grid(grid_state)
     else:
         print("No winning path possible.")
@@ -95,9 +107,10 @@ def main():
     print("1. Automatic Solution (BFS)")
     print("2. Automatic Solution (DFS)")
     print("3. Automatic Solution (UCS)")
-    print("4. Interactive Play")
+    print("4. Automatic Solution (A*)")
+    print("5. Interactive Play")
 
-    mode = input("Enter 1, 2, 3, or 4: ").strip()
+    mode = input("Enter 1, 2, 3, 4, or 5: ").strip()
     if mode == "1":
         play_game(grid, "bfs")
     elif mode == "2":
@@ -105,9 +118,12 @@ def main():
     elif mode == "3":
         play_game(grid, "ucs")
     elif mode == "4":
+        play_game(grid, "astar")
+    elif mode == "5":
         interactive_game(grid)
     else:
         print("Invalid choice. Exiting.")
+
 
 
 
